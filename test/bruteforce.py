@@ -9,7 +9,7 @@ if True:
 
 def main() -> NoReturn:
     solver = CrossAnalysisSolver()
-    solver.monte_carlo_sampling()
+    solver.solve()
 
 
 if __name__ == "__main__":
