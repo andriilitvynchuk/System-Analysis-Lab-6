@@ -8,8 +8,9 @@ if True:
 
 
 def main() -> NoReturn:
-    pass
+    solver = CrossAnalysisSolver()
+    solver.monte_carlo_sampling()
 
 
-if __init__ == "__main__":
+if __name__ == "__main__":
     main()
