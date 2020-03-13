@@ -127,8 +127,6 @@ class CrossAnalysisSolver:
                 cond_probs=cond_probs,
                 number_of_executions=number_of_executions,
             )
-        np.set_printoptions(precision=3)
-        # print(final_table)
         value = CrossAnalysisSolver.integral_value(
             number_of_executions=number_of_executions,
             cond_probs=self.cond_probs.copy(),
@@ -136,5 +134,4 @@ class CrossAnalysisSolver:
             odd_probs=self.odd_probs.copy(),
             situation_std=self.std_probs,
         )
-        # print(value)
         return final_table, value

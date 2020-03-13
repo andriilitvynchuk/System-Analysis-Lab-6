@@ -29,6 +29,7 @@ class App(QWidget):
         self.input_cond_prob_file: Optional[QLineEdit] = None
         self.number_of_executions: Optional[QLineEdit] = None
         self.table_widget: Optional[QTableWidget] = None
+        self.value: Optional[QLineEdit] = None
         self.init_ui()
 
     def init_ui(self) -> NoReturn:
@@ -73,6 +74,13 @@ class App(QWidget):
         execute_button.move(450, 130)
         execute_button.clicked.connect(self.execute)
 
+        value = QLabel("Інтегральний коефіціент достовірності", up)
+        value.move(2, 180)
+        self.value = QLineEdit(up)
+        # self.value.setText("10000")
+        self.value.setFixedWidth(100)
+        self.value.move(365, 177)
+
         table_frame = QFrame(self)
         table_frame.setFrameShape(QFrame.StyledPanel)
 
@@ -98,16 +106,13 @@ class App(QWidget):
             self.table_widget.setHorizontalHeaderItem(
                 index + 2, QTableWidgetItem(f"Сценарій {index + 1}")
             )
-        # self.table_widget.setHorizontalHeaderItem(
-        #     7, QTableWidgetItem(f"Класифікація ситуації")
-        # )
 
         vertical_layout = QVBoxLayout()
         vertical_layout.addWidget(up)
         vertical_layout.addWidget(table_frame)
         self.setLayout(vertical_layout)
 
-        self.setGeometry(150, 150, 1300, 600)
+        self.setGeometry(150, 150, 1600, 600)
         self.setWindowTitle("Метод перехресного впливу")
         self.show()
 
@@ -149,21 +154,9 @@ class App(QWidget):
                     delta = final_table[i][j] - final_table[i][1]
                     sign = "+" if delta > 0 else "-"
                     main_part += f" ({sign} {abs(delta):.4f})"
-                self.table_widget.setItem(
-                    i, j, QTableWidgetItem(main_part)
-                )
+                self.table_widget.setItem(i, j, QTableWidgetItem(main_part))
 
-    def graphic(self) -> NoReturn:
-        if self.solver is not None:
-            try:
-                self.solver.plot_i(
-                    s=int(self.plot_situation.text()) - 1,
-                    f=int(self.plot_factor.text()) - 1,
-                )
-            except IndexError:
-                print("Такої ситуації або фактору у заданій вибірці немає")
-        else:
-            print("Спершу виконайте обчислення")
+        self.value.setText(f"{value:.4f} % ")
 
 
 if __name__ == "__main__":
