@@ -97,10 +97,10 @@ class App(QWidget):
                 index, QTableWidgetItem(f"S{index + 1}")
             )
         self.table_widget.setHorizontalHeaderItem(
-            0, QTableWidgetItem(f"Середні оцінки \n експертів")
+            0, QTableWidgetItem(f"Середні оцінки \n ймовірностей експертів")
         )
         self.table_widget.setHorizontalHeaderItem(
-            1, QTableWidgetItem(f"Відкалібровані оцінки \n експертів")
+            1, QTableWidgetItem(f"Відкалібровані \n ймовірності")
         )
         for index in range(8):
             self.table_widget.setHorizontalHeaderItem(
