@@ -156,7 +156,7 @@ class App(QWidget):
                     main_part += f" ({sign} {abs(delta):.4f})"
                 self.table_widget.setItem(i, j, QTableWidgetItem(main_part))
 
-        self.value.setText(f"{value:.4f} % ")
+        self.value.setText(f"{value:.4f}")
 
 
 if __name__ == "__main__":
