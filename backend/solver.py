@@ -74,10 +74,10 @@ class CrossAnalysisSolver:
                 1, upper_tmp_probs[situation_index] + situation_std[situation_index]
             )
             lower_statistical_results = CrossAnalysisSolver.monte_carlo_sampling(
-                probs=lower_tmp_probs, cond_probs=cond_probs, number_of_executions=2000
+                probs=lower_tmp_probs, cond_probs=cond_probs, number_of_executions=4000
             )
             upper_statistical_results = CrossAnalysisSolver.monte_carlo_sampling(
-                probs=upper_tmp_probs, cond_probs=cond_probs, number_of_executions=2000
+                probs=upper_tmp_probs, cond_probs=cond_probs, number_of_executions=4000
             )
             first_part = np.max(
                 np.abs(
@@ -128,7 +128,7 @@ class CrossAnalysisSolver:
                 number_of_executions=number_of_executions,
             )
         np.set_printoptions(precision=3)
-        print(final_table)
+        # print(final_table)
         value = CrossAnalysisSolver.integral_value(
             number_of_executions=number_of_executions,
             cond_probs=self.cond_probs.copy(),
@@ -136,4 +136,5 @@ class CrossAnalysisSolver:
             odd_probs=self.odd_probs.copy(),
             situation_std=self.std_probs,
         )
+        # print(value)
         return final_table, value
