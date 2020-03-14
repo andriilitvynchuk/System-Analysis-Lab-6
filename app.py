@@ -94,7 +94,7 @@ class App(QWidget):
             header.setSectionResizeMode(index, QHeaderView.ResizeToContents)
         for index in range(8):
             self.table_widget.setVerticalHeaderItem(
-                index, QTableWidgetItem(f"S{index + 1}")
+                index, QTableWidgetItem(f"e{index + 1}")
             )
         self.table_widget.setHorizontalHeaderItem(
             0, QTableWidgetItem(f"Середні оцінки \n ймовірностей експертів")
@@ -112,7 +112,7 @@ class App(QWidget):
         vertical_layout.addWidget(table_frame)
         self.setLayout(vertical_layout)
 
-        self.setGeometry(150, 150, 1600, 600)
+        self.setGeometry(150, 150, 1450, 600)
         self.setWindowTitle("Метод перехресного впливу")
         self.show()
 
@@ -145,18 +145,18 @@ class App(QWidget):
         for i in range(final_table.shape[0]):
             for j in range(2):
                 self.table_widget.setItem(
-                    i, j, QTableWidgetItem("%.4f" % final_table[i][j])
+                    i, j, QTableWidgetItem("%.3f" % final_table[i][j])
                 )
         for i in range(final_table.shape[0]):
             for j in range(2, final_table.shape[1]):
-                main_part = "%.4f" % final_table[i][j]
+                main_part = "%.3f" % final_table[i][j]
                 if i != j - 2:
                     delta = final_table[i][j] - final_table[i][1]
                     sign = "+" if delta > 0 else "-"
-                    main_part += f" ({sign} {abs(delta):.4f})"
+                    main_part += f" ({sign} {abs(delta):.3f})"
                 self.table_widget.setItem(i, j, QTableWidgetItem(main_part))
 
-        self.value.setText(f"{value:.4f}")
+        self.value.setText(f"{value:.3f}")
 
 
 if __name__ == "__main__":

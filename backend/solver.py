@@ -127,7 +127,7 @@ class CrossAnalysisSolver:
                 cond_probs=cond_probs,
                 number_of_executions=number_of_executions,
             )
-        value = CrossAnalysisSolver.integral_value(
+        value: float = CrossAnalysisSolver.integral_value(
             number_of_executions=number_of_executions,
             cond_probs=self.cond_probs.copy(),
             probs=self.probs.copy(),
