@@ -1,14 +1,12 @@
 import sys
-from typing import NoReturn, Optional, Union
+from typing import NoReturn, Optional
 
 from numpy import abs
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QApplication,
-    QComboBox,
     QFileDialog,
     QFrame,
-    QHBoxLayout,
     QHeaderView,
     QLabel,
     QLineEdit,
@@ -23,7 +21,7 @@ from backend import CrossAnalysisSolver
 
 
 class App(QWidget):
-    def __init__(self) -> NoReturn:
+    def __init__(self) -> None:
         super().__init__()
         self.input_prob_file: Optional[QLineEdit] = None
         self.input_cond_prob_file: Optional[QLineEdit] = None
@@ -93,19 +91,11 @@ class App(QWidget):
         for index in range(10):
             header.setSectionResizeMode(index, QHeaderView.ResizeToContents)
         for index in range(8):
-            self.table_widget.setVerticalHeaderItem(
-                index, QTableWidgetItem(f"e{index + 1}")
-            )
-        self.table_widget.setHorizontalHeaderItem(
-            0, QTableWidgetItem(f"Середні оцінки \n ймовірностей експертів")
-        )
-        self.table_widget.setHorizontalHeaderItem(
-            1, QTableWidgetItem(f"Відкалібровані \n ймовірності")
-        )
+            self.table_widget.setVerticalHeaderItem(index, QTableWidgetItem(f"e{index + 1}"))
+        self.table_widget.setHorizontalHeaderItem(0, QTableWidgetItem(f"Середні оцінки \n ймовірностей експертів"))
+        self.table_widget.setHorizontalHeaderItem(1, QTableWidgetItem(f"Відкалібровані \n ймовірності"))
         for index in range(8):
-            self.table_widget.setHorizontalHeaderItem(
-                index + 2, QTableWidgetItem(f"Сценарій {index + 1}")
-            )
+            self.table_widget.setHorizontalHeaderItem(index + 2, QTableWidgetItem(f"Сценарій {index + 1}"))
 
         vertical_layout = QVBoxLayout()
         vertical_layout.addWidget(up)
@@ -119,44 +109,39 @@ class App(QWidget):
     def open_prob_file_dialog(self) -> NoReturn:
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        target_path = str(
-            QFileDialog.getOpenFileName(self, "Виберіть файл", options=options)[0]
-        )
+        target_path = str(QFileDialog.getOpenFileName(self, "Виберіть файл", options=options)[0])
         if target_path:
             self.input_prob_file.setText(target_path)
 
     def open_cond_prob_file_dialog(self) -> NoReturn:
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        target_path = str(
-            QFileDialog.getOpenFileName(self, "Виберіть файл", options=options)[0]
-        )
+        target_path = str(QFileDialog.getOpenFileName(self, "Виберіть файл", options=options)[0])
         if target_path:
             self.input_cond_prob_file.setText(target_path)
 
     def execute(self) -> NoReturn:
         solver = CrossAnalysisSolver(
-            probs_path=self.input_prob_file.text(),
-            cond_probs_path=self.input_cond_prob_file.text(),
+            probs_path=self.input_prob_file.text(), cond_probs_path=self.input_cond_prob_file.text(),
         )
-        final_table, value = solver.solve(
-            number_of_executions=int(self.number_of_executions.text())
-        )
-        for i in range(final_table.shape[0]):
-            for j in range(2):
-                self.table_widget.setItem(
-                    i, j, QTableWidgetItem("%.3f" % final_table[i][j])
-                )
-        for i in range(final_table.shape[0]):
-            for j in range(2, final_table.shape[1]):
-                main_part = "%.3f" % final_table[i][j]
-                if i != j - 2:
-                    delta = final_table[i][j] - final_table[i][1]
-                    sign = "+" if delta > 0 else "-"
-                    main_part += f" ({sign} {abs(delta):.3f})"
-                self.table_widget.setItem(i, j, QTableWidgetItem(main_part))
+        try:
+            final_table, value = solver.solve(number_of_executions=int(self.number_of_executions.text()))
 
-        self.value.setText(f"{value:.3f}")
+            for i in range(final_table.shape[0]):
+                for j in range(2):
+                    self.table_widget.setItem(i, j, QTableWidgetItem("%.3f" % final_table[i][j]))
+            for i in range(final_table.shape[0]):
+                for j in range(2, final_table.shape[1]):
+                    main_part = "%.3f" % final_table[i][j]
+                    if i != j - 2:
+                        delta = final_table[i][j] - final_table[i][1]
+                        sign = "+" if delta > 0 else "-"
+                        main_part += f" ({sign} {abs(delta):.3f})"
+                    self.table_widget.setItem(i, j, QTableWidgetItem(main_part))
+
+                self.value.setText(f"{value:.3f}")
+        except ValueError:
+            print("Кількість ітерацій має бути цілим значенням")
 
 
 if __name__ == "__main__":

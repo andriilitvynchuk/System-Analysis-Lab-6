@@ -1,4 +1,4 @@
-from typing import NoReturn, Tuple
+from typing import Tuple
 
 import numpy as np
 
@@ -8,7 +8,7 @@ class CrossAnalysisSolver:
         self,
         probs_path: str = "../data/pv_variant_3_probabilities.txt",
         cond_probs_path: str = "../data/pv_variant_3_cond_probabilities.txt",
-    ) -> NoReturn:
+    ) -> None:
         self.expert_probs: np.ndarray = np.loadtxt(probs_path)
         self.cond_probs: np.ndarray = np.loadtxt(cond_probs_path)
 
@@ -62,8 +62,8 @@ class CrossAnalysisSolver:
         odd_probs: np.ndarray,
         situation_std: np.ndarray,
         number_of_executions: int = 10000,
-    ):
-        l1 = 0
+    ) -> float:
+        l1: float = 0
         for situation_index in range(probs.shape[0]):
             lower_tmp_probs = probs.copy()
             lower_tmp_probs[situation_index] = max(
@@ -82,9 +82,7 @@ class CrossAnalysisSolver:
             first_part = np.max(
                 np.abs(
                     [
-                        1
-                        - CrossAnalysisSolver.odd(lower_statistical_results[index])
-                        / odd_probs[index]
+                        1 - CrossAnalysisSolver.odd(lower_statistical_results[index]) / odd_probs[index]
                         for index in range(probs.shape[0])
                         if index != situation_index
                     ]
@@ -93,9 +91,7 @@ class CrossAnalysisSolver:
             second_part = np.max(
                 np.abs(
                     [
-                        1
-                        - CrossAnalysisSolver.odd(upper_statistical_results[index])
-                        / odd_probs[index]
+                        1 - CrossAnalysisSolver.odd(upper_statistical_results[index]) / odd_probs[index]
                         for index in range(probs.shape[0])
                         if index != situation_index
                     ]
@@ -112,20 +108,14 @@ class CrossAnalysisSolver:
         final_table = np.zeros((probs.shape[0], probs.shape[0] + 2))
         final_table[:, 0] = probs
         final_table[:, 1] = CrossAnalysisSolver.monte_carlo_sampling(
-            probs=probs,
-            cond_probs=cond_probs,
-            number_of_executions=number_of_executions,
+            probs=probs, cond_probs=cond_probs, number_of_executions=number_of_executions,
         )
 
         for alternate_situation in range(probs.shape[0]):
             alternate_probs = probs.copy()
             alternate_probs[alternate_situation] = 1
-            final_table[
-                :, alternate_situation + 2
-            ] = CrossAnalysisSolver.monte_carlo_sampling(
-                probs=alternate_probs,
-                cond_probs=cond_probs,
-                number_of_executions=number_of_executions,
+            final_table[:, alternate_situation + 2] = CrossAnalysisSolver.monte_carlo_sampling(
+                probs=alternate_probs, cond_probs=cond_probs, number_of_executions=number_of_executions,
             )
         value: float = CrossAnalysisSolver.integral_value(
             number_of_executions=number_of_executions,
