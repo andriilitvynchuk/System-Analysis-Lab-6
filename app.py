@@ -1,7 +1,7 @@
 import sys
 from typing import NoReturn, Optional
 
-from numpy import abs
+import numpy as np
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import (
     QApplication,
@@ -127,16 +127,16 @@ class App(QWidget):
         try:
             final_table, value = solver.solve(number_of_executions=int(self.number_of_executions.text()))
 
-            for i in range(final_table.shape[0]):
+            for i in range(final_table.shape[0]):  # pylint: disable=E1136
                 for j in range(2):
                     self.table_widget.setItem(i, j, QTableWidgetItem("%.3f" % final_table[i][j]))
-            for i in range(final_table.shape[0]):
-                for j in range(2, final_table.shape[1]):
+            for i in range(final_table.shape[0]):  # pylint: disable=E1136
+                for j in range(2, final_table.shape[1]):  # pylint: disable=E1136
                     main_part = "%.3f" % final_table[i][j]
                     if i != j - 2:
                         delta = final_table[i][j] - final_table[i][1]
                         sign = "+" if delta > 0 else "-"
-                        main_part += f" ({sign} {abs(delta):.3f})"
+                        main_part += f" ({sign} {np.abs(delta):.3f})"
                     self.table_widget.setItem(i, j, QTableWidgetItem(main_part))
 
                 self.value.setText(f"{value:.3f}")
@@ -145,6 +145,6 @@ class App(QWidget):
 
 
 if __name__ == "__main__":
-    pyqt_application = QApplication(sys.argv)
-    my_app = App()
-    sys.exit(pyqt_application.exec_())
+    PYQT_APPLICATION = QApplication(sys.argv)
+    MY_APP = App()
+    sys.exit(PYQT_APPLICATION.exec_())
