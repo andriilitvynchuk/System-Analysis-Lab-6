@@ -144,7 +144,11 @@ class App(QWidget):
             print("Кількість ітерацій має бути цілим значенням")
 
 
+def main() -> NoReturn:
+    pyqt_application = QApplication(sys.argv)
+    _ = App()
+    sys.exit(pyqt_application.exec_())
+
+
 if __name__ == "__main__":
-    PYQT_APPLICATION = QApplication(sys.argv)
-    MY_APP = App()
-    sys.exit(PYQT_APPLICATION.exec_())
+    main()
